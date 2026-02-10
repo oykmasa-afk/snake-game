@@ -5,35 +5,32 @@
 <title>Snake Game + Music</title>
 <style>
 body{
-    background:#111;
-    color:#fff;
-    font-family:Arial;
-    text-align:center;
-    margin:0;<div id="joystick">
-  <button onclick="setDir('up')">⬆️</button>
-  <div>
-    <button onclick="setDir('left')">⬅️</button>
-    <button onclick="setDir('down')">⬇️</button>
-    <button onclick="setDir('right')">➡️</button>
-  </div>
-</div>
-    
+  background:#111;
+  color:#fff;
+  font-family:Arial;
+  text-align:center;
+  margin:0;
 }
+
 canvas{
-    background:#000;
-    border:3px solid #0f0;
-    margin-top:10px;
+  background:#000;
+  border:3px solid #0f0;
+  margin-top:10px;
 }
-button,select{
-    padding:8px 12px;
-    margin:4px;
-    font-weight:bold;
-    border:none;
-    border-radius:6px;
+
+#joystick{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9999;
 }
-button{background:#0f0;}
-select{background:#222;color:#fff;}
-#menu{margin-top:10px;}
+
+#joystick button{
+  font-size:26px;
+  padding:10px 14px;
+  margin:4px;
+}
 </style>
 </head>
 
