@@ -9,7 +9,15 @@ body{
     color:#fff;
     font-family:Arial;
     text-align:center;
-    margin:0;
+    margin:0;<div id="joystick">
+  <button onclick="setDir('up')">⬆️</button>
+  <div>
+    <button onclick="setDir('left')">⬅️</button>
+    <button onclick="setDir('down')">⬇️</button>
+    <button onclick="setDir('right')">➡️</button>
+  </div>
+</div>
+    
 }
 canvas{
     background:#000;
