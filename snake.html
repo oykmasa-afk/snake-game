@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Snake Game + Music</title>
+<style>
+body{
+    background:#111;
+    color:#fff;
+    font-family:Arial;
+    text-align:center;
+    margin:0;
+}
+canvas{
+    background:#000;
+    border:3px solid #0f0;
+    margin-top:10px;
+}
+button,select{
+    padding:8px 12px;
+    margin:4px;
+    font-weight:bold;
+    border:none;
+    border-radius:6px;
+}
+button{background:#0f0;}
+select{background:#222;color:#fff;}
+#menu{margin-top:10px;}
+</style>
+</head>
+
+<body>
+<h2>🐍 Snake Game</h2>
+
+<canvas id="game" width="300" height="300"></canvas>
+
+<p>
+Score: <span id="score">0</span> |
+High Score: <span id="high">0</span>
+</p>
+
+<div id="menu">
+<button onclick="pauseGame()">STOP</button>
+<button onclick="resumeGame()">RESUME</button>
+<button onclick="restartGame()">RESTART</button>
+</div>
+
+<hr>
+
+<h3>🎵 Music Player</h3>
+<select id="musicSelect">
+    <option value="">-- Pilih Lagu --</option>
+    <option value="aku_cah_kerjo.mp3">Aku Cah Kerjo</option>
+    <option value="diary_depresiku.mp3">Diary Depresiku</option>
+    <option value="pamit_kerjo.mp3">Pamit Kerjo</option>
+</select><br>
+
+<button onclick="playMusic()">PLAY</button>
+<button onclick="pauseMusic()">PAUSE</button>
+
+<audio id="music"></audio>
+
+<script>
+/* ===== GAME ===== */
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+const grid=15;
+let snake=[{x:150,y:150}];
+let food=randomFood();
+let dx=grid,dy=0;
+let score=0;
+let high=localStorage.getItem("high")||0;
+let run=true;
+
+document.getElementById("high").innerText=high;
+
+function randomFood(){
+ return{
+  x:Math.floor(Math.random()*20)*grid,
+  y:Math.floor(Math.random()*20)*grid
+ }
+}
+
+function loop(){
+ if(!run) return;
+
+ const head={x:snake[0].x+dx,y:snake[0].y+dy};
+
+ if(head.x<0||head.y<0||head.x>=300||head.y>=300||
+    snake.some(s=>s.x===head.x&&s.y===head.y)){
+    run=false;
+    return;
+ }
+
+ snake.unshift(head);
+
+ if(head.x===food.x&&head.y===food.y){
+    score++;
+    document.getElementById("score").innerText=score;
+    food=randomFood();
+    if(score>high){
+        high=score;
+        localStorage.setItem("high",high);
+        document.getElementById("high").innerText=high;
+    }
+ }else{
+    snake.pop();
+ }
+
+ ctx.clearRect(0,0,300,300);
+ ctx.fillStyle="red";
+ ctx.fillRect(food.x,food.y,grid,grid);
+ ctx.fillStyle="#0f0";
+ snake.forEach(s=>ctx.fillRect(s.x,s.y,grid,grid));
+}
+setInterval(loop,120);
+
+document.addEventListener("keydown",e=>{
+ if(e.key==="ArrowUp"&&dy===0){dx=0;dy=-grid}
+ if(e.key==="ArrowDown"&&dy===0){dx=0;dy=grid}
+ if(e.key==="ArrowLeft"&&dx===0){dx=-grid;dy=0}
+ if(e.key==="ArrowRight"&&dx===0){dx=grid;dy=0}
+});
+
+function pauseGame(){run=false;}
+function resumeGame(){run=true;}
+function restartGame(){
+ snake=[{x:150,y:150}];
+ dx=grid;dy=0;
+ score=0;
+ document.getElementById("score").innerText=0;
+ food=randomFood();
+ run=true;
+}
+
+/* ===== MUSIC ===== */
+const music=document.getElementById("music");
+
+function playMusic(){
+ const song=document.getElementById("musicSelect").value;
+ if(song===""){alert("Pilih lagu dulu");return;}
+ music.pause();
+ music.src=song;
+ music.currentTime=0;
+ music.play().catch(()=>{
+   alert("Browser memblokir audio.\nGunakan Kiwi Browser / upload ke internet.");
+ });
+}
+function pauseMusic(){music.pause();}
+</script>
+
+</body>
+</html>
